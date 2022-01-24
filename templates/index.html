@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Notepad</title>
+
+    {% block meta %}
+    <meta name="description" content="">
+    {% endblock %}
+
+    <meta name="viewport" content="width=device-width">
+
+    {% assets filters='cssrewrite', output='gen/all.%(version)s.css',
+              'style_css' %}
+      <link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css"
+            media="screen,projection,print">
+    {% endassets %}
+
+    {# <noscript>
+      <link href="{{ url_for('static', filename='c/noscript.css') }}" rel="stylesheet"
+            type="text/css" media="screen,projection,print">
+    </noscript> #}
+
+    <link rel="SHORTCUT ICON"
+          href="{{ url_for('static', filename='favicon.ico') }}">
+
+    {% block extrahead %}
+    {% endblock %}
+  </head>
+  <body {% if key %}class="saved"{% endif %}>
+
+    <form action="{{ url_for('save', key=key) }}" method="post" id="form">
+      <textarea name="t" id="text" placeholder="Start typing...">
+        {{- text }}</textarea>
+      <input type="submit" value="Save">
+    </form>
+
+    <div id="panel">
+      {% if key %}
+        {% include 'panel.html' %}
+      {% endif %}
+    </div>
+
+    <div class="loader">Saving...</div>
+
+    {% assets filters='rjsmin', output='gen/all.%(version)s.js',
+              'j/site.js' %}
+        <script type='text/javascript' src='{{ ASSET_URL }}'></script>
+    {% endassets %}
+  </body>
+</html>
